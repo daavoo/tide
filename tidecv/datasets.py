@@ -99,10 +99,17 @@ def COCO(path:str=None, name:str=None, year:int=2017, ann_set:str='val', force_d
 		image  = ann['image_id']
 		_class = ann['category_id']
 		box    = ann['bbox']
-		mask   = f.toRLE(ann['segmentation'], image_lookup[image]['width'], image_lookup[image]['height'])
-		
+		mask = None
+		"""
+		if ann.get('segmentation') is None:
+			mask = None
+		else:
+			mask   = f.toRLE(ann['segmentation'], image_lookup[image]['width'], image_lookup[image]['height'])
+		"""
 		if ann['iscrowd']: data.add_ignore_region(image, _class, box, mask)
 		else:              data.add_ground_truth (image, _class, box, mask)
+	
+	data.image_lookup = image_lookup
 	
 	return data
 
